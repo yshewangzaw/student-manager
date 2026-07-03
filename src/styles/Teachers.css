@@ -1,0 +1,108 @@
+.teachers-page { max-width: 1400px; }
+
+.teacher-form {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.teachers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.teacher-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: all var(--transition-slow);
+}
+.teacher-card:hover {
+  border-color: var(--clr-border2);
+  box-shadow: var(--shadow);
+}
+
+.teacher-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.teacher-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(56,189,248,0.3);
+}
+
+.teacher-card-actions { display: flex; gap: 4px; }
+
+.teacher-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+}
+
+.teacher-subject {
+  font-size: 0.8rem;
+  color: var(--clr-primary);
+  font-weight: 600;
+}
+
+.teacher-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.teacher-detail {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+.teacher-courses {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--clr-border);
+}
+.teacher-courses-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--clr-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.teacher-courses-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.course-chip {
+  background: rgba(108,99,255,0.12);
+  color: var(--clr-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.input-error { border-color: var(--clr-danger) !important; }
+.field-error { font-size: 0.72rem; color: var(--clr-danger); margin-top: 2px; }
+.form-section-title {
+  font-size: 1rem; font-weight: 700; color: var(--clr-text);
+  margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+.form-actions {
+  display: flex; gap: 0.75rem; margin-top: 1.25rem;
+  padding-top: 1rem; border-top: 1px solid var(--clr-border); flex-wrap: wrap;
+}

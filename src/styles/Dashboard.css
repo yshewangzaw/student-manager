@@ -1,0 +1,207 @@
+.dashboard {
+  max-width: 1400px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-date {
+  font-size: 0.8rem;
+  color: var(--clr-text-dim);
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ── Stats Grid ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--clr-border);
+  text-decoration: none;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.stat-card-icon {
+  font-size: 1.75rem;
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-card--purple { background: rgba(108,99,255,0.08); border-color: rgba(108,99,255,0.25); }
+.stat-card--purple .stat-card-icon { background: rgba(108,99,255,0.15); }
+.stat-card--purple .stat-value { color: #a78bfa; }
+
+.stat-card--blue { background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.25); }
+.stat-card--blue .stat-card-icon { background: rgba(56,189,248,0.15); }
+.stat-card--blue .stat-value { color: #7dd3fc; }
+
+.stat-card--teal { background: rgba(20,184,166,0.08); border-color: rgba(20,184,166,0.25); }
+.stat-card--teal .stat-card-icon { background: rgba(20,184,166,0.15); }
+.stat-card--teal .stat-value { color: #5eead4; }
+
+.stat-card--green { background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+.stat-card--green .stat-card-icon { background: rgba(34,197,94,0.15); }
+.stat-card--green .stat-value { color: #4ade80; }
+
+.stat-card--orange { background: rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.25); }
+.stat-card--orange .stat-card-icon { background: rgba(245,158,11,0.15); }
+.stat-card--orange .stat-value { color: #fbbf24; }
+
+.stat-card--gold { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.25); }
+.stat-card--gold .stat-card-icon { background: rgba(251,191,36,0.15); }
+.stat-card--gold .stat-value { color: #fde68a; }
+
+.stat-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.stat-title { font-size: 0.8rem; font-weight: 600; color: var(--clr-text-muted); margin-top: 4px; }
+.stat-sub   { font-size: 0.72rem; color: var(--clr-text-dim); margin-top: 2px; }
+
+/* ── Dashboard Grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+.card-title { font-size: 0.95rem; font-weight: 700; color: var(--clr-text); }
+.card-link  { font-size: 0.8rem; color: var(--clr-primary); text-decoration: none; font-weight: 600; }
+.card-link:hover { text-decoration: underline; }
+
+/* ── Top Students ── */
+.top-students-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.top-student-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface2);
+}
+.rank {
+  font-size: 0.75rem;
+  font-weight: 800;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.rank--gold   { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.rank--silver { background: rgba(148,163,184,0.2); color: #94a3b8; }
+.rank--bronze { background: rgba(180,83,9,0.2);   color: #d97706; }
+.rank--plain  { background: var(--clr-border);     color: var(--clr-text-dim); }
+
+.top-student-info { flex: 1; }
+.top-student-name { font-size: 0.875rem; font-weight: 600; color: var(--clr-text); }
+.top-student-meta { font-size: 0.72rem; color: var(--clr-text-dim); }
+.gpa-badge {
+  background: rgba(108,99,255,0.15);
+  color: var(--clr-primary);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* ── Grade Bars ── */
+.grade-bars { display: flex; flex-direction: column; gap: 0.85rem; }
+.grade-bar-row { display: flex; align-items: center; gap: 0.75rem; }
+.grade-bar-label { width: 20px; font-weight: 700; font-size: 0.85rem; color: var(--clr-text-muted); }
+.grade-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--clr-surface2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.grade-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.8s ease;
+}
+.grade-bar-count { width: 24px; text-align: right; font-size: 0.8rem; color: var(--clr-text-dim); }
+
+/* ── Course Dist ── */
+.course-dist-list { display: flex; flex-direction: column; gap: 0.6rem; }
+.course-dist-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface2);
+}
+.course-dist-name   { font-size: 0.85rem; font-weight: 600; color: var(--clr-text); }
+.course-dist-teacher{ font-size: 0.72rem; color: var(--clr-text-dim); margin-top: 2px; }
+.course-dist-count  { font-size: 0.8rem; font-weight: 600; color: var(--clr-primary); white-space: nowrap; }
+
+/* ── Recent ── */
+.recent-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.recent-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface2);
+}
+.recent-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--clr-primary-g);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.recent-info { flex: 1; }
+.recent-name { font-size: 0.875rem; font-weight: 600; color: var(--clr-text); }
+.recent-meta { font-size: 0.72rem; color: var(--clr-text-dim); }

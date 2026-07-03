@@ -1,0 +1,107 @@
+.student-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-slow);
+}
+
+.student-card:hover {
+  border-color: var(--clr-primary);
+  box-shadow: 0 0 0 1px rgba(108,99,255,0.2), var(--shadow);
+  transform: translateY(-2px);
+}
+
+.student-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.student-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--clr-primary-g);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  box-shadow: 0 4px 12px rgba(108,99,255,0.3);
+}
+
+.student-card-badges {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.gpa-pill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  background: rgba(108,99,255,0.12);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.student-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.student-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 12px;
+}
+
+.student-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--clr-text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.student-meta-item span:last-child {
+  font-size: 0.82rem;
+  color: var(--clr-text);
+  font-weight: 500;
+}
+
+.student-email {
+  word-break: break-all;
+}
+
+.student-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--clr-border);
+}
+
+.student-card-actions .btn {
+  flex: 1;
+  justify-content: center;
+  font-size: 0.8rem;
+  padding: 0.45rem 0.75rem;
+}

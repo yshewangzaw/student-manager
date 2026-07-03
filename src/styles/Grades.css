@@ -1,0 +1,125 @@
+.grades-page { max-width: 1400px; }
+
+.grade-form {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.grades-filters {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+.grades-filters .form-select { min-width: 160px; }
+
+.grades-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 1.25rem;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .grades-layout { grid-template-columns: 1fr; }
+  .grades-sidebar { order: -1; }
+}
+
+.grades-main { display: flex; flex-direction: column; gap: 0.75rem; }
+.grades-sidebar { position: sticky; top: 1rem; }
+
+/* Grade table cells */
+.grade-student-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.grade-student-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--clr-primary-g);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.grade-course-name {
+  font-size: 0.72rem;
+  color: var(--clr-text-dim);
+  margin-top: 2px;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.semester-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  background: var(--clr-surface2);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.score-bar-wrap { display: flex; flex-direction: column; gap: 4px; }
+.score-value { font-weight: 700; font-size: 0.9rem; color: var(--clr-text); }
+.score-bar {
+  width: 80px;
+  height: 5px;
+  background: var(--clr-surface2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.score-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+
+.gpa-pts {
+  font-weight: 700;
+  color: var(--clr-primary);
+  font-size: 0.9rem;
+}
+
+.score-preview {
+  font-size: 0.75rem;
+  color: var(--clr-success);
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+/* Leaderboard */
+.leaderboard { display: flex; flex-direction: column; gap: 0.5rem; }
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface2);
+}
+.leaderboard-info { flex: 1; }
+.leaderboard-name { font-size: 0.85rem; font-weight: 600; color: var(--clr-text); }
+.leaderboard-meta { font-size: 0.7rem; color: var(--clr-text-dim); }
+
+/* reuse from Dashboard */
+.rank { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; flex-shrink: 0; }
+.rank--gold   { background: rgba(251,191,36,0.2); color: #fbbf24; }
+.rank--silver { background: rgba(148,163,184,0.2); color: #94a3b8; }
+.rank--bronze { background: rgba(180,83,9,0.2);   color: #d97706; }
+.rank--plain  { background: var(--clr-border);     color: var(--clr-text-dim); font-size: 0.65rem; }
+
+.gpa-badge { background: rgba(108,99,255,0.15); color: var(--clr-primary); font-weight: 700; font-size: 0.8rem; padding: 3px 10px; border-radius: 999px; }
+.course-chip { background: rgba(108,99,255,0.12); color: var(--clr-primary); font-size: 0.72rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+
+/* shared */
+.input-error { border-color: var(--clr-danger) !important; }
+.field-error { font-size: 0.72rem; color: var(--clr-danger); margin-top: 2px; }
+.form-section-title { font-size: 1rem; font-weight: 700; color: var(--clr-text); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--clr-border); }
+.form-actions { display: flex; gap: 0.75rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--clr-border); }
+.results-count { font-size: 0.8rem; color: var(--clr-text-dim); }

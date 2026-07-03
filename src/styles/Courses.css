@@ -1,0 +1,100 @@
+.courses-page { max-width: 1400px; }
+
+.course-form {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.courses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.course-card {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  transition: all var(--transition-slow);
+}
+.course-card:hover {
+  border-color: var(--clr-border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.course-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.course-code-badge {
+  background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 6px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 8px rgba(20,184,166,0.3);
+}
+
+.course-card-actions { display: flex; gap: 4px; }
+
+.course-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  line-height: 1.35;
+}
+
+.course-description {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  line-height: 1.5;
+}
+
+.course-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--clr-border);
+  margin-top: auto;
+}
+
+.course-meta-item {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+}
+
+.course-enrolled {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #14b8a6;
+  background: rgba(20,184,166,0.1);
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.input-error { border-color: var(--clr-danger) !important; }
+.field-error { font-size: 0.72rem; color: var(--clr-danger); margin-top: 2px; }
+.form-section-title {
+  font-size: 1rem; font-weight: 700; color: var(--clr-text);
+  margin-bottom: 1.25rem; padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+.form-actions {
+  display: flex; gap: 0.75rem; margin-top: 1.25rem;
+  padding-top: 1rem; border-top: 1px solid var(--clr-border);
+}
