@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import ToastNotification from "./ToastNotification";
 import { Outlet } from "react-router-dom";
 import "../styles/Layout.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Layout() {
   // Initialize from localStorage (falls back to "light")
@@ -22,6 +23,14 @@ export default function Layout() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  function handleLogout(navigate) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  }
+
+  // inside your component:
+
   return (
     <div className="layout" data-theme={theme}>
       <Sidebar />
@@ -39,6 +48,8 @@ export default function Layout() {
         </main>
       </div>
       <ToastNotification />
+      {/* const navigate = useNavigate();
+      <button onClick={() => handleLogout(navigate)}>Logout</button>; */}
     </div>
   );
 }
