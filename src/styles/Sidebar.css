@@ -10,6 +10,8 @@
   top: 0;
   height: 100vh;
   overflow-y: auto;
+  transition: transform 0.25s ease;
+  z-index: 100;
 }
 
 .sidebar-brand {
@@ -32,7 +34,7 @@
   font-weight: 800;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(108,99,255,0.4);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
 }
 
 .sidebar-brand-name {
@@ -83,11 +85,13 @@
 }
 
 .sidebar-link--active {
-  background: rgba(108,99,255,0.15);
+  background: rgba(108, 99, 255, 0.15);
   color: var(--clr-primary);
   font-weight: 600;
 }
-.sidebar-link--active .sidebar-icon { filter: none; }
+.sidebar-link--active .sidebar-icon {
+  filter: none;
+}
 
 .sidebar-icon {
   width: 22px;
@@ -131,4 +135,54 @@
 .sidebar-role {
   font-size: 0.7rem;
   color: var(--clr-text-dim);
+}
+
+/* ---------- Mobile: off-canvas drawer ---------- */
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Applied to .sidebar when open (toggled via JS state) */
+  .sidebar--open {
+    transform: translateX(0);
+  }
+
+  /* Backdrop shown behind the drawer when open, closes it on click */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 99;
+  }
+
+  /* Hamburger button, hidden on desktop. Fixed so it's reachable
+     regardless of scroll position, since it now lives outside <aside>. */
+  .sidebar-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.1rem;
+    z-index: 101; /* above .sidebar (100) and .sidebar-backdrop (99) */
+  }
+}
+
+@media (min-width: 1025px) {
+  .sidebar-toggle {
+    display: none; /* only needed on mobile/tablet */
+  }
 }
