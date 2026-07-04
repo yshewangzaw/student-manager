@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
-function Login() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -15,7 +16,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/login", {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -25,18 +26,13 @@ function Login() {
 
       if (!res.ok) {
         setError(data.message || "Login failed");
-        setLoading(false);
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
 
-      if (data.role === "admin") {
-        navigate("/");
-      } else {
-        setError("Access denied: admin only");
-      }
+      navigate("/students");
     } catch (err) {
       setError("Server error. Please try again.");
     } finally {
@@ -47,46 +43,39 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-card">
-        <div className="login-icon">🎓</div>
-        <h1 className="login-title">Welcome Back</h1>
-        <p className="login-subtitle">Sign in to Student Manager</p>
+        <h2>🎓 Student Manager</h2>
+        <p>Sign in to continue</p>
 
-        <form onSubmit={handleLogin} className="login-form">
-          {error && <div className="login-error">{error}</div>}
+        {error && <div className="error-box">{error}</div>}
 
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
+        <form onSubmit={handleLogin}>
+          <div className="field">
             <input
-              id="email"
               type="email"
-              placeholder="admin@example.com"
+              placeholder="Email address"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
 
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
+          <div className="field">
             <input
-              id="password"
               type="password"
-              placeholder="••••••••"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <button type="submit" className="login-button" disabled={loading}>
-            {loading ? <span className="spinner"></span> : "Sign In"}
+          <button className="btn" disabled={loading}>
+            {loading ? "Signing in..." : "Login"}
           </button>
         </form>
 
-        <p className="login-footer">Admins only · Student Manager Dashboard</p>
+        <small>Admin access only</small>
       </div>
     </div>
   );
 }
-
-export default Login;

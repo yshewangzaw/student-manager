@@ -6,21 +6,25 @@ import { useAppContext } from "../context/AppContext";
 import "../styles/Students.css";
 
 export default function Students() {
-  const { students, editingStudent, setEditingStudent, stats } = useAppContext();
-  const [search, setSearch]         = useState("");
-  const [filterCourse, setCourse]   = useState("");
-  const [filterStatus, setStatus]   = useState("");
-  const [filterGender, setGender]   = useState("");
-  const [sortBy, setSortBy]         = useState("name");
-  const [showForm, setShowForm]     = useState(false);
+  const { students, editingStudent, setEditingStudent, stats } =
+    useAppContext();
+  const [search, setSearch] = useState("");
+  const [filterCourse, setCourse] = useState("");
+  const [filterStatus, setStatus] = useState("");
+  const [filterGender, setGender] = useState("");
+  const [sortBy, setSortBy] = useState("name");
+  const [showForm, setShowForm] = useState(false);
   const [viewStudent, setViewStudent] = useState(null);
 
-  const courses = [...new Set(students.map(s => s.course))].filter(Boolean).sort();
+  const courses = [...new Set(students.map((s) => s.course))]
+    .filter(Boolean)
+    .sort();
 
-  let filtered = students.filter(s => {
-    const matchSearch = s.name.toLowerCase().includes(search.toLowerCase())
-      || s.email?.toLowerCase().includes(search.toLowerCase())
-      || s.course.toLowerCase().includes(search.toLowerCase());
+  let filtered = students.filter((s) => {
+    const matchSearch =
+      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.email?.toLowerCase().includes(search.toLowerCase()) ||
+      s.course.toLowerCase().includes(search.toLowerCase());
     const matchCourse = !filterCourse || s.course === filterCourse;
     const matchStatus = !filterStatus || s.status === filterStatus;
     const matchGender = !filterGender || s.gender === filterGender;
@@ -28,10 +32,10 @@ export default function Students() {
   });
 
   filtered.sort((a, b) => {
-    if (sortBy === "name")  return a.name.localeCompare(b.name);
-    if (sortBy === "gpa")   return (b.gpa || 0) - (a.gpa || 0);
+    if (sortBy === "name") return a.name.localeCompare(b.name);
+    if (sortBy === "gpa") return (b.gpa || 0) - (a.gpa || 0);
     if (sortBy === "batch") return b.batch.localeCompare(a.batch);
-    if (sortBy === "age")   return a.age - b.age;
+    if (sortBy === "age") return a.age - b.age;
     return 0;
   });
 
@@ -46,7 +50,9 @@ export default function Students() {
       <div className="section-header">
         <div>
           <h1 className="section-title">Students</h1>
-          <p className="section-subtitle">{stats.totalStudents} students · {stats.activeStudents} active</p>
+          <p className="section-subtitle">
+            {stats.totalStudents} students · {stats.activeStudents} active
+          </p>
         </div>
         <button className="btn btn-primary" onClick={handleOpenAdd}>
           ➕ Add Student
@@ -55,7 +61,12 @@ export default function Students() {
 
       {/* ── Form ── */}
       {(showForm || editingStudent) && (
-        <StudentForm onClose={() => { setShowForm(false); setEditingStudent(null); }} />
+        <StudentForm
+          onClose={() => {
+            setShowForm(false);
+            setEditingStudent(null);
+          }}
+        />
       )}
 
       {/* ── Filters ── */}
@@ -65,25 +76,45 @@ export default function Students() {
           placeholder="🔍 Search by name, email, course…"
           className="form-input search-input"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <select className="form-select filter-select" value={filterCourse} onChange={e => setCourse(e.target.value)}>
+        <select
+          className="form-select filter-select"
+          value={filterCourse}
+          onChange={(e) => setCourse(e.target.value)}
+        >
           <option value="">All Courses</option>
-          {courses.map(c => <option key={c} value={c}>{c}</option>)}
+          {courses.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
         </select>
-        <select className="form-select filter-select" value={filterStatus} onChange={e => setStatus(e.target.value)}>
+        <select
+          className="form-select filter-select"
+          value={filterStatus}
+          onChange={(e) => setStatus(e.target.value)}
+        >
           <option value="">All Statuses</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
           <option value="graduated">Graduated</option>
         </select>
-        <select className="form-select filter-select" value={filterGender} onChange={e => setGender(e.target.value)}>
+        <select
+          className="form-select filter-select"
+          value={filterGender}
+          onChange={(e) => setGender(e.target.value)}
+        >
           <option value="">All Genders</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Other">Other</option>
         </select>
-        <select className="form-select filter-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+        <select
+          className="form-select filter-select"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+        >
           <option value="name">Sort: Name</option>
           <option value="gpa">Sort: GPA ↓</option>
           <option value="batch">Sort: Batch</option>
@@ -104,7 +135,7 @@ export default function Students() {
         </div>
       ) : (
         <div className="students-grid">
-          {filtered.map(student => (
+          {filtered.map((student) => (
             <StudentCard
               key={student.id}
               student={student}
@@ -116,7 +147,10 @@ export default function Students() {
 
       {/* ── Detail Modal ── */}
       {viewStudent && (
-        <StudentModal student={viewStudent} onClose={() => setViewStudent(null)} />
+        <StudentModal
+          student={viewStudent}
+          onClose={() => setViewStudent(null)}
+        />
       )}
     </div>
   );

@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// TEST ROUTE
-router.get("/", (req, res) => {
-  res.json({ message: "Students API working!" });
-});
+const studentController = require("../controllers/studentController");
+
+router.get("/", studentController.getStudents);
+router.post("/", studentController.createStudent);
+router.put("/:id", studentController.updateStudent);
+router.delete("/:id", studentController.deleteStudent);
 
 module.exports = router;
