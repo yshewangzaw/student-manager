@@ -66,6 +66,9 @@ export default function Students() {
             setShowForm(false);
             setEditingStudent(null);
           }}
+          onclick={() => {
+            console.log("Student added/updated");
+          }}
         />
       )}
 
@@ -140,6 +143,7 @@ export default function Students() {
               key={student.id}
               student={student}
               onViewDetail={setViewStudent}
+              phone={"08877777777"}
             />
           ))}
         </div>

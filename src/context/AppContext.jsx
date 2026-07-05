@@ -5,10 +5,11 @@ import {
   useEffect,
   useCallback,
 } from "react";
+
 const API_URL = "http://localhost:3000/api/students";
 const AppContext = createContext();
 
-// ─── helpers ───────────────────────────────────────────────────────────────
+// ─── helpers ──────────────────────────────────────────────────────────
 function useLocalStorage(key, initialValue) {
   const [storedValue, setStoredValue] = useState(() => {
     try {
@@ -39,7 +40,7 @@ function calcLetterGrade(score) {
   return { letter: "F", points: 0.0 };
 }
 
-// ─── seed data ─────────────────────────────────────────────────────────────
+// ─── seed data ─────────────────────────────────────────────────────────
 const SEED_COURSES = [
   {
     id: 1,
@@ -221,8 +222,18 @@ const SEED_ATTENDANCE = [
   { id: 10, studentId: 6, date: dateOffset(1), status: "absent" },
 ];
 
-// ─── provider ──────────────────────────────────────────────────────────────
+// ─── provider ─────────────────────────────────────────────────────────
 export function AppProvider({ children }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("AppContext: Checking token -", token ? "found" : "not found");
+    setIsAuthenticated(!!token);
+    setIsLoading(false);
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
 
@@ -325,7 +336,7 @@ export function AppProvider({ children }) {
     }, 600);
   }
 
-  // ── courses ───────────────────────────────────────────────────────────
+  // ── courses ──────────────────────────────────────────────────────────
   function addCourse(data) {
     setLoading(true);
     setTimeout(() => {
@@ -355,7 +366,7 @@ export function AppProvider({ children }) {
     }, 600);
   }
 
-  // ── grades ────────────────────────────────────────────────────────────
+  // ── grades ──────────────────────────────────────────────────────────
   function addGrade(data) {
     setLoading(true);
     setTimeout(() => {
@@ -460,6 +471,9 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        isLoading,
         loading,
         toasts,
         addToast,

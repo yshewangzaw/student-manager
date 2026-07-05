@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
+import { useNavigate, Outlet } from "react-router-dom";
+
 import Sidebar from "./Sidebar";
 import ToastNotification from "./ToastNotification";
-import { Outlet } from "react-router-dom";
+
 import "../styles/Layout.css";
-import { useNavigate } from "react-router-dom";
 
 export default function Layout() {
-  // Initialize from localStorage (falls back to "light")
+  const navigate = useNavigate();
+
+  // Theme state
   const [theme, setTheme] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") || "light";
-    }
-    return "light";
+    return localStorage.getItem("theme") || "light";
   });
 
-  // Persist theme choice
+  // Save theme
   useEffect(() => {
     localStorage.setItem("theme", theme);
   }, [theme]);
@@ -23,33 +23,42 @@ export default function Layout() {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  function handleLogout(navigate) {
+  // Logout
+  const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     navigate("/login");
-  }
-
-  // inside your component:
+  };
 
   return (
     <div className="layout" data-theme={theme}>
+      {/* Sidebar */}
       <Sidebar />
-      <div className="layout-body">
-        <main className="layout-content">
-          <button
-            type="button"
-            className="theme-toggle"
-            onClick={toggleTheme}
-            aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-          >
-            {theme === "light" ? "🌙" : "☀️"}
-          </button>
-          <Outlet />
-        </main>
+
+      {/* Main content */}
+      <div className="main-content">
+        {/* Top bar */}
+        <div className="top-bar">
+          <div className="left">{/* optional title */}</div>
+
+          <div className="right">
+            {/* Theme toggle */}
+            <button className="theme-toggle" onClick={toggleTheme}>
+              {theme === "light" ? "🌙" : "☀️"}
+            </button>
+
+            {/* Logout */}
+            <button className="logout-btn btn-primary" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* Page content */}
+        <Outlet />
       </div>
+
       <ToastNotification />
-      {/* const navigate = useNavigate();
-      <button onClick={() => handleLogout(navigate)}>Logout</button>; */}
     </div>
   );
 }

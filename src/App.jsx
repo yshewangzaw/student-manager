@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
@@ -13,8 +13,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <Routes>
+      {/* Login */}
       <Route path="/login" element={<Login />} />
 
+      {/* Protected Layout */}
       <Route
         path="/"
         element={
@@ -23,7 +25,7 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
+        <Route index element={<Navigate to="/login" replace />} />
         <Route path="students" element={<Students />} />
         <Route path="teachers" element={<Teachers />} />
         <Route path="courses" element={<Courses />} />
