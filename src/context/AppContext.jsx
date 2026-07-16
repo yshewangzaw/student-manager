@@ -40,6 +40,54 @@ function calcLetterGrade(score) {
   return { letter: "F", points: 0.0 };
 }
 
+// ─── auth ────────────────────────────────────────────────────────────
+function authHeaders() {
+  const token = localStorage.getItem("token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+// ─── student field mapping (backend <-> frontend) ──────────────────────
+// NOTE: you renamed the `full_name` column to `name` in the database.
+// Make sure your backend controller (SELECT/INSERT/UPDATE queries) uses
+// `name` now too. This mapper accepts either `name` or `full_name` from
+// the backend response so nothing breaks while you finish updating it —
+// once your backend fully uses `name`, you can delete the `|| s.full_name` fallback.
+function normalizeStudent(s) {
+  return {
+    id: s.id,
+    user_id: s.user_id,
+    name: s.name || "",
+    age: s.age,
+    gender: s.gender,
+    course: s.course,
+    batch: s.batch,
+    email: s.email,
+    phone: s.phone,
+    address: s.address,
+
+    status: s.status === "Active" ? "active" : "inactive",
+
+    enrollmentDate: s.enrollment_date,
+    createdAt: s.created_at,
+
+    gpa: s.gpa ?? null,
+  };
+}
+function toBackendStudent(data) {
+  return {
+    name: data.name,
+    email: data.email,
+    age: data.age,
+    gender: data.gender,
+    course: data.course,
+    batch: data.batch,
+    phone: data.phone,
+    address: data.address,
+    status: data.status,
+    enrollment_date: data.enrollmentDate,
+  };
+}
+
 // ─── seed data ─────────────────────────────────────────────────────────
 const SEED_COURSES = [
   {
@@ -110,87 +158,6 @@ const SEED_TEACHERS = [
   },
 ];
 
-const SEED_STUDENTS = [
-  {
-    id: 1,
-    name: "Alice Chen",
-    age: 20,
-    course: "CS",
-    batch: "2023",
-    email: "alice@student.edu",
-    phone: "+1-555-1001",
-    gender: "Female",
-    status: "active",
-    enrollmentDate: "2023-09-01",
-    gpa: 3.8,
-  },
-  {
-    id: 2,
-    name: "Bob Martinez",
-    age: 22,
-    course: "Math",
-    batch: "2022",
-    email: "bob@student.edu",
-    phone: "+1-555-1002",
-    gender: "Male",
-    status: "active",
-    enrollmentDate: "2022-09-01",
-    gpa: 3.2,
-  },
-  {
-    id: 3,
-    name: "Carol White",
-    age: 21,
-    course: "CS",
-    batch: "2023",
-    email: "carol@student.edu",
-    phone: "+1-555-1003",
-    gender: "Female",
-    status: "active",
-    enrollmentDate: "2023-09-01",
-    gpa: 3.5,
-  },
-  {
-    id: 4,
-    name: "David Brown",
-    age: 23,
-    course: "Eng",
-    batch: "2021",
-    email: "david@student.edu",
-    phone: "+1-555-1004",
-    gender: "Male",
-    status: "graduated",
-    enrollmentDate: "2021-09-01",
-    gpa: 3.1,
-  },
-  {
-    id: 5,
-    name: "Eva Kim",
-    age: 20,
-    course: "CS",
-    batch: "2024",
-    email: "eva@student.edu",
-    phone: "+1-555-1005",
-    gender: "Female",
-    status: "active",
-    enrollmentDate: "2024-01-15",
-    gpa: 3.9,
-  },
-  {
-    id: 6,
-    name: "Frank Lee",
-    age: 21,
-    course: "Math",
-    batch: "2023",
-    email: "frank@student.edu",
-    phone: "+1-555-1006",
-    gender: "Male",
-    status: "inactive",
-    enrollmentDate: "2023-09-01",
-    gpa: 2.7,
-  },
-];
-
 const SEED_GRADES = [
   { id: 1, studentId: 1, courseId: 1, score: 92, semester: "2024-S1" },
   { id: 2, studentId: 1, courseId: 3, score: 88, semester: "2024-S1" },
@@ -237,7 +204,7 @@ export function AppProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState([]);
 
-  const [students, setStudents] = useLocalStorage("sm_students", SEED_STUDENTS);
+  const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useLocalStorage("sm_teachers", SEED_TEACHERS);
   const [courses, setCourses] = useLocalStorage("sm_courses", SEED_COURSES);
   const [grades, setGrades] = useLocalStorage("sm_grades", SEED_GRADES);
@@ -275,35 +242,119 @@ export function AppProvider({ children }) {
   }
 
   // ── students ──────────────────────────────────────────────────────────
-  function addStudent(data) {
+  async function fetchStudents() {
     setLoading(true);
-    setTimeout(() => {
-      setStudents((prev) => [...prev, { ...data, id: Date.now(), gpa: null }]);
+    try {
+      const res = await fetch(API_URL, {
+        headers: { ...authHeaders() },
+      });
+      if (!res.ok) throw new Error("Failed to fetch students");
+      const data = await res.json();
+      setStudents(data.map(normalizeStudent));
+    } catch (err) {
+      addToast(err.message || "Could not load students", "error");
+    } finally {
       setLoading(false);
-      addToast(`${data.name} added successfully`);
-    }, 600);
+    }
   }
 
-  function updateStudent(data) {
+  async function addStudent(data) {
     setLoading(true);
-    setTimeout(() => {
-      setStudents((prev) => prev.map((s) => (s.id === data.id ? data : s)));
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+
+          // send JWT token
+          ...authHeaders(),
+        },
+
+        body: JSON.stringify(toBackendStudent(data)),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Failed to add student");
+      }
+
+      // backend returns:
+      // {
+      //   student:{...},
+      //   login:{email,password}
+      // }
+
+      const newStudent = normalizeStudent(result.student);
+
+      setStudents((prev) => [...prev, newStudent]);
+
+      addToast(`${newStudent.name} added successfully`);
+
+      // send email and password to StudentForm
+      return result.login;
+    } catch (err) {
+      addToast(err.message, "error");
+
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }
+  async function updateStudent(data) {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/${data.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...authHeaders(),
+        },
+        body: JSON.stringify(toBackendStudent(data)),
+      });
+      if (!res.ok) throw new Error("Failed to update student");
+      const data = await res.json();
+
+      const newStudent = normalizeStudent(data.student);
+      console.log("Result from backend:", result);
+      console.log("New student:", newStudent);
+
+      console.log("Student Login:", data.login);
+
+      setStudents((prev) => {
+        const updated = [...prev, newStudent];
+        console.log("Students array:", updated);
+        return updated;
+      });
       setEditingStudent(null);
+      addToast(`${updated.name} updated successfully`);
+    } catch (err) {
+      addToast(err.message || "Could not update student", "error");
+    } finally {
       setLoading(false);
-      addToast(`${data.name} updated successfully`);
-    }, 600);
+    }
   }
 
-  function deleteStudent(id) {
+  async function deleteStudent(id) {
     setLoading(true);
-    setTimeout(() => {
+    try {
       const student = students.find((s) => s.id === id);
+      const res = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+        headers: { ...authHeaders() },
+      });
+      if (!res.ok) throw new Error("Failed to delete student");
       setStudents((prev) => prev.filter((s) => s.id !== id));
       setGrades((prev) => prev.filter((g) => g.studentId !== id));
       setAttendance((prev) => prev.filter((a) => a.studentId !== id));
-      setLoading(false);
       addToast(`${student?.name || "Student"} deleted`, "error");
-    }, 600);
+    } catch (err) {
+      addToast(err.message || "Could not delete student", "error");
+    } finally {
+      setLoading(false);
+    }
   }
 
   // ── teachers ──────────────────────────────────────────────────────────
@@ -467,6 +518,15 @@ export function AppProvider({ children }) {
       .sort((a, b) => b.gpa - a.gpa)
       .slice(0, 5),
   };
+
+  useEffect(() => {
+    const role = localStorage.getItem("role");
+
+    if (role === "admin" || role === "teacher") {
+      fetchStudents();
+    }
+  }, []);
+  console.log("Students:", students);
 
   return (
     <AppContext.Provider

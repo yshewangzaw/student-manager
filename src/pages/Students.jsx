@@ -4,6 +4,7 @@ import StudentCard from "../components/StudentCard";
 import StudentModal from "../components/StudentModal";
 import { useAppContext } from "../context/AppContext";
 import "../styles/Students.css";
+import LoginCredentialModal from "../components/LoginCredentialModal";
 
 export default function Students() {
   const { students, editingStudent, setEditingStudent, stats } =
@@ -15,6 +16,7 @@ export default function Students() {
   const [sortBy, setSortBy] = useState("name");
   const [showForm, setShowForm] = useState(false);
   const [viewStudent, setViewStudent] = useState(null);
+  const [loginCredentials, setLoginCredentials] = useState(null);
 
   const courses = [...new Set(students.map((s) => s.course))]
     .filter(Boolean)
@@ -22,9 +24,9 @@ export default function Students() {
 
   let filtered = students.filter((s) => {
     const matchSearch =
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
+      s.name?.toLowerCase().includes(search.toLowerCase()) ||
       s.email?.toLowerCase().includes(search.toLowerCase()) ||
-      s.course.toLowerCase().includes(search.toLowerCase());
+      s.course?.toLowerCase().includes(search.toLowerCase());
     const matchCourse = !filterCourse || s.course === filterCourse;
     const matchStatus = !filterStatus || s.status === filterStatus;
     const matchGender = !filterGender || s.gender === filterGender;
@@ -32,10 +34,10 @@ export default function Students() {
   });
 
   filtered.sort((a, b) => {
-    if (sortBy === "name") return a.name.localeCompare(b.name);
+    if (sortBy === "name") return (a.name || "").localeCompare(b.name || "");
     if (sortBy === "gpa") return (b.gpa || 0) - (a.gpa || 0);
-    if (sortBy === "batch") return b.batch.localeCompare(a.batch);
-    if (sortBy === "age") return a.age - b.age;
+    if (sortBy === "batch") return (b.batch || "").localeCompare(a.batch || "");
+    if (sortBy === "age") return (a.age || 0) - (b.age || 0);
     return 0;
   });
 
@@ -66,8 +68,8 @@ export default function Students() {
             setShowForm(false);
             setEditingStudent(null);
           }}
-          onclick={() => {
-            console.log("Student added/updated");
+          onStudentCreated={(credentials) => {
+            setLoginCredentials(credentials);
           }}
         />
       )}
@@ -143,7 +145,7 @@ export default function Students() {
               key={student.id}
               student={student}
               onViewDetail={setViewStudent}
-              phone={"08877777777"}
+              phone={student.phone}
             />
           ))}
         </div>
@@ -154,6 +156,14 @@ export default function Students() {
         <StudentModal
           student={viewStudent}
           onClose={() => setViewStudent(null)}
+        />
+      )}
+      {loginCredentials && (
+        <LoginCredentialModal
+          credentials={loginCredentials}
+          onClose={() => {
+            setLoginCredentials(null);
+          }}
         />
       )}
     </div>

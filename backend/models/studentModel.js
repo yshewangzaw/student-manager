@@ -6,15 +6,28 @@ exports.getAllStudents = (callback) => {
 };
 
 // CREATE
-exports.createStudent = (data, callback) => {
+exports.createStudentWithUser = (data, callback) => {
   const sql = `
-    INSERT INTO students 
-    (full_name, age, gender, course, batch, email, phone, address, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `;
+INSERT INTO students
+(
+user_id,
+name,
+age,
+gender,
+course,
+batch,
+email,
+phone,
+address,
+status,
+enrollment_date
+)
+VALUES (?,?,?,?,?,?,?,?,?,?,?)
+`;
 
   const values = [
-    data.full_name,
+    data.user_id,
+    data.name,
     data.age,
     data.gender,
     data.course,
@@ -23,21 +36,21 @@ exports.createStudent = (data, callback) => {
     data.phone,
     data.address,
     data.status,
+    data.enrollment_date,
   ];
 
   db.query(sql, values, callback);
 };
-
-// UPDATE
 exports.updateStudent = (id, data, callback) => {
   const sql = `
-    UPDATE students 
-    SET full_name=?, age=?, gender=?, course=?, batch=?, email=?, phone=?, address=?, status=?
-    WHERE id=?
+    UPDATE students
+    SET name = ?, age = ?, gender = ?, course = ?, batch = ?,
+        email = ?, phone = ?, address = ?, status = ?, enrollment_date = ?
+    WHERE id = ?
   `;
 
   const values = [
-    data.full_name,
+    data.name,
     data.age,
     data.gender,
     data.course,
@@ -46,6 +59,7 @@ exports.updateStudent = (id, data, callback) => {
     data.phone,
     data.address,
     data.status,
+    data.enrollment_date,
     id,
   ];
 
@@ -55,4 +69,19 @@ exports.updateStudent = (id, data, callback) => {
 // DELETE
 exports.deleteStudent = (id, callback) => {
   db.query("DELETE FROM students WHERE id=?", [id], callback);
+};
+
+// GET ONE
+exports.getStudentById = (id, callback) => {
+  db.query("SELECT * FROM students WHERE id = ?", [id], callback);
+};
+// GET STUDENT PROFILE BY USER ID
+exports.getStudentByUserId = (userId, callback) => {
+  const sql = `
+    SELECT *
+    FROM students
+    WHERE user_id = ?
+  `;
+
+  db.query(sql, [userId], callback);
 };

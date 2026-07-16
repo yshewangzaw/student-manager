@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 
 const NAV_ITEMS = [
-  { to: "/", label: "Dashboard", icon: "⊞" },
+  { to: "/dashboard", label: "Dashboard", icon: "⊞" },
   { to: "/students", label: "Students", icon: "🎓" },
   { to: "/teachers", label: "Teachers", icon: "👨‍🏫" },
   { to: "/courses", label: "Courses", icon: "📚" },

@@ -12,9 +12,10 @@ const EMPTY = {
   gender: "",
   status: "active",
   enrollmentDate: "",
+  address: "",
 };
 
-export default function StudentForm({ onClose, onClick }) {
+export default function StudentForm({ onClose, onStudentCreated }) {
   const {
     addStudent,
     updateStudent,
@@ -26,16 +27,29 @@ export default function StudentForm({ onClose, onClick }) {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    setForm(editingStudent ? { ...EMPTY, ...editingStudent } : EMPTY);
+    if (editingStudent) {
+      // Merge with EMPTY first, then overwrite null/undefined fields from
+      // the backend with "" so inputs never flip between controlled and
+      // uncontrolled (React requires a defined value for the whole lifetime).
+      const merged = { ...EMPTY, ...editingStudent };
+      Object.keys(merged).forEach((key) => {
+        if (merged[key] === null || merged[key] === undefined) {
+          merged[key] = EMPTY[key] ?? "";
+        }
+      });
+      setForm(merged);
+    } else {
+      setForm(EMPTY);
+    }
     setErrors({});
   }, [editingStudent]);
 
   function validate() {
     const e = {};
-    if (!form.name.trim()) e.name = "Name is required";
+    if (!form.name?.trim()) e.name = "Name is required";
     if (!form.age || form.age < 1) e.age = "Valid age required";
-    if (!form.course.trim()) e.course = "Course is required";
-    if (!form.batch.trim()) e.batch = "Batch is required";
+    if (!form.course?.trim()) e.course = "Course is required";
+    if (!form.batch?.trim()) e.batch = "Batch is required";
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Invalid email";
     return e;
@@ -47,19 +61,43 @@ export default function StudentForm({ onClose, onClick }) {
       setErrors((prev) => ({ ...prev, [e.target.name]: undefined }));
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    const v = validate();
-    if (Object.keys(v).length) {
-      setErrors(v);
+
+    const validationErrors = validate();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    if (editingStudent) updateStudent({ ...form, age: Number(form.age) });
-    else addStudent({ ...form, age: Number(form.age) });
-    setForm(EMPTY);
-    if (onClose) onClose();
-  }
 
+    try {
+      if (editingStudent) {
+        await updateStudent({
+          ...form,
+          id: editingStudent.id,
+          age: Number(form.age),
+        });
+      } else {
+        const credentials = await addStudent({
+          ...form,
+          age: Number(form.age),
+        });
+
+        if (credentials && onStudentCreated) {
+          onStudentCreated(credentials);
+        }
+      }
+
+      setForm(EMPTY);
+
+      if (onClose) {
+        onClose();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
   function handleCancel() {
     setEditingStudent(null);
     setForm(EMPTY);
@@ -68,7 +106,7 @@ export default function StudentForm({ onClose, onClick }) {
 
   return (
     <form onSubmit={handleSubmit} className="student-form scale-in" noValidate>
-      <div className="form-section-title" onClick={onClick}>
+      <div className="form-section-title" onClick={handleSubmit}>
         {editingStudent ? "✏️ Edit Student" : "➕ Add New Student"}
       </div>
 
@@ -153,6 +191,7 @@ export default function StudentForm({ onClose, onClick }) {
         <div className="form-group">
           <label className="form-label">Gender</label>
           <select
+            required
             name="gender"
             value={form.gender}
             onChange={handleChange}
@@ -179,15 +218,35 @@ export default function StudentForm({ onClose, onClick }) {
             <option value="graduated">Graduated</option>
           </select>
         </div>
+        {/* <div className="form-group">
+          <label className="form-label">Password</label>
 
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Enter student password"
+          />
+        </div> */}
         <div className="form-group" style={{ gridColumn: "1 / -1" }}>
           <label className="form-label">Enrollment Date</label>
           <input
             name="enrollmentDate"
             type="date"
-            value={form.enrollmentDate}
+            value={form.enrollmentDate || ""}
             onChange={handleChange}
             className="form-input"
+          />
+        </div>
+
+        <div className="form-group" style={{ gridColumn: "1 / -1" }}>
+          <label>Address</label>
+          <input
+            type="text"
+            name="address"
+            value={form.address || ""}
+            onChange={handleChange}
           />
         </div>
       </div>

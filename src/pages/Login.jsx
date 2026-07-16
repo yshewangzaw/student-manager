@@ -32,7 +32,13 @@ export default function Login() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
 
-      navigate("/students");
+      if (data.role === "admin") {
+        navigate("/admin/dashboard");
+      } else if (data.role === "teacher") {
+        navigate("/teacher/dashboard");
+      } else if (data.role === "student") {
+        navigate("/student/me");
+      }
     } catch (err) {
       setError("Server error. Please try again.");
     } finally {
